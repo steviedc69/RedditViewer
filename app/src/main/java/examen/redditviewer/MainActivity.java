@@ -20,9 +20,13 @@ public class MainActivity extends ActionBarActivity {
         //if in portrait mode, inflate fragment into framgent container
         //this is not needed in landscape mode, since we don't have to replace fragments and we can declare the fragments staticly in the XML layout
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            final FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.add(R.id.portrait_fragment_container, new PostsFragment(), "POSTS_FRAGMENT");
-            ft.commit();
+            //when switching from portrait->landscape->portrait, don't re-add the fragment
+            Fragment fragment = getFragmentManager().findFragmentByTag("POSTS_FRAGMENT");
+            if(fragment == null) {
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.add(R.id.portrait_fragment_container, new PostsFragment(), "POSTS_FRAGMENT");
+                ft.commit();
+            }
         }
     }
     @Override
